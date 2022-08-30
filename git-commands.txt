@@ -1,0 +1,37 @@
+clear
+rm -rf *.code
+rm -rf .git
+git init
+git checkout master
+
+touch current.code
+echo current > current.code
+git add . && git commit -m "current"
+git log --oneline
+
+git checkout -b development
+
+touch feature-ok-1.code
+echo ok1 > feature-ok-1.code
+git add . && git commit -m "feature-ok-1"
+
+touch feature-bug-1.code
+echo bug1 > feature-bug-1.code
+git add . && git commit -m "feature-bug-1"
+
+touch feature-ok-2.code
+echo ok2 > feature-ok-2.code
+git add . && git commit -m "feature-ok-2"
+
+git log --oneline
+
+commit_feature_ok_1=`git log --oneline | grep feature-ok-1 | awk '{print $1}'`
+commit_feature_ok_2=`git log --oneline | grep feature-ok-2 | awk '{print $1}'`
+commit_feature_bug_1=`git log --oneline | grep feature-bug-1 | awk '{print $1}'`
+
+echo "commit_feature_ok_1 = $commit_feature_ok_1"
+echo "commit_feature_ok_2 = $commit_feature_ok_2"
+echo "commit_feature_bug_1 = $commit_feature_bug_1"
+
+git checkout master
+git cherry-pick $commit_feature_ok_1 $commit_feature_ok_2
